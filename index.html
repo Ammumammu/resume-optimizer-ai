@@ -3,231 +3,447 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resume Optimizer AI</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Resume Optimizer AI — Fix your resume in 60 seconds — land more interviews</title>
+    <meta name="description" content="Fix your resume in 60 seconds — land more interviews. Free to try, no account required.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        body {
-            margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --bg: #0f172a;
+            --surface: #1e293b;
+            --surface2: #334155;
+            --text: #f1f5f9;
+            --muted: #94a3b8;
+            --accent: #10b981;
+            --border: #334155;
         }
-        .container {
-            width: 90%;
-            max-width: 600px;
-            padding: 2rem;
-            background-color: #1e293b;
-            border-radius: 1rem;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .logo { font-size: 18px; font-weight: 800; color: var(--primary); text-decoration: none; }
+        .uses-badge {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 4px 12px;
+            background: rgba(99,102,241,.2);
+            border: 1px solid rgba(99,102,241,.4);
+            border-radius: 100px;
+            color: #a5b4fc;
+        }
+
+        /* ── Hero ── */
+        .hero {
+            text-align: center;
+            padding: 56px 24px 40px;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .hero h1 {
+            font-size: 42px;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, #f1f5f9, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        @media (max-width: 600px) { .hero h1 { font-size: 28px; } }
+        .hero p {
+            font-size: 18px;
+            color: var(--muted);
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .trust-signal {
+            font-size: 13px;
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* ── Tool ── */
+        .tool-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 24px 80px;
+        }
+        .tool-card {
+            background: var(--surface);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 32px;
+        }
+        .input-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        textarea {
+            width: 100%;
+            min-height: 160px;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            line-height: 1.6;
+            padding: 14px 16px;
+            resize: vertical;
+            outline: none;
+            transition: border-color .15s;
+        }
+        textarea:focus { border-color: var(--primary); }
+        textarea::placeholder { color: var(--muted); }
+
+        #generate-btn {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+            margin-top: 16px;
+            transition: background .15s, transform .1s;
+        }
+        #generate-btn:hover:not(:disabled) { background: var(--primary-dark); }
+        #generate-btn:active:not(:disabled) { transform: scale(0.98); }
+        #generate-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* ── Output ── */
+        .output-card {
+            margin-top: 24px;
+            background: var(--bg);
+            border: 1.5px solid var(--accent);
+            border-radius: 12px;
+            padding: 24px;
+            display: none;
+        }
+        .output-card.visible { display: block; }
+        .output-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 12px;
+        }
+        .output-text {
+            font-size: 14px;
+            line-height: 1.8;
+            color: var(--text);
+            white-space: pre-wrap;
+        }
+        .copy-btn {
+            margin-top: 16px;
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--muted);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: border-color .15s, color .15s;
+        }
+        .copy-btn:hover { border-color: var(--primary); color: var(--primary); }
+
+        /* ── Paywall ── */
+        #paywall {
+            position: fixed;
+            inset: 0;
+            background: rgba(15,23,42,.95);
+            backdrop-filter: blur(8px);
+            z-index: 100;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        #paywall.visible { display: flex; }
+        .paywall-card {
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            padding: 40px;
+            max-width: 480px;
+            width: 100%;
             text-align: center;
         }
-        h1, h2, p {
-            margin: 0.5rem 0;
-        }
-        input, textarea, button {
-            width: calc(100% - 2rem);
-            padding: 1rem;
-            margin: 1rem 0;
+        .paywall-card h2 { font-size: 26px; font-weight: 800; margin-bottom: 10px; }
+        .paywall-card p { color: var(--muted); font-size: 15px; line-height: 1.6; margin-bottom: 28px; }
+        .price-big { font-size: 48px; font-weight: 800; color: var(--primary); line-height: 1; }
+        .price-period { font-size: 16px; color: var(--muted); margin-bottom: 24px; }
+        .paywall-cta {
+            display: block;
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: #fff;
             border: none;
-            border-radius: 0.5rem;
-            background-color: #ffffff;
-            color: #0f172a;
-            font-size: 1rem;
-        }
-        button {
-            background-color: #6366f1;
-            color: #ffffff;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 800;
             cursor: pointer;
+            font-family: inherit;
+            text-decoration: none;
+            margin-bottom: 12px;
+            transition: background .15s;
         }
-        button:hover {
-            background-color: #4f46e5;
+        .paywall-cta:hover { background: var(--primary-dark); }
+        .paywall-or { color: var(--muted); font-size: 13px; margin: 12px 0; }
+        .email-row { display: flex; gap: 8px; }
+        .email-input {
+            flex: 1;
+            padding: 12px 14px;
+            background: var(--bg);
+            border: 1.5px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
         }
-        .right {
-            text-align: right;
+        .email-input:focus { border-color: var(--primary); }
+        .email-btn {
+            padding: 12px 16px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            white-space: nowrap;
+            transition: background .15s;
         }
-        .cross-sell {
-            margin-top: 2rem;
-        }
-        .cross-sell h3 {
-            margin-bottom: 1rem;
-        }
-        .cross-sell-item {
-            background-color: #111827;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            margin: 0.5rem 0;
-        }
-        @media (max-width: 600px) {
-            .container {
-                width: 100%;
-                padding: 1rem;
-            }
-        }
+        .email-btn:hover { background: var(--primary); border-color: var(--primary); }
+        .guarantee-text { font-size: 12px; color: var(--muted); margin-top: 16px; }
+
+        /* ── Error ── */
+        #error-msg { color: #f87171; font-size: 13px; margin-top: 10px; min-height: 18px; }
     </style>
 </head>
 <body>
-    <div id="root"></div>
-    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
-    <script src="https://cdn.posthog.com/posthog-js.min.js"></script>
-    <script type="text/babel">
-        const CONFIG = {
-            GROQ_KEY: 'CONFIG.GROQ_KEY'
-        };
 
-        const posthog = new PostHog('phc_euWjg9sVjJX1x1x1x1x1x1x1x1x1x1x1x1x1', {
-            api_host: 'https://app.posthog.com',
-        });
+<header>
+    <a class="logo" href="/">Resume Optimizer AI</a>
+    <div class="uses-badge" id="uses-badge">2 free uses left</div>
+</header>
 
-        const LandingPage = ({ onUseTool }) => (
-            <div className="container">
-                <h1>Rejected Resumes</h1>
-                <h2>Job seekers get rewritten resumes in 15 seconds</h2>
-                <p>Paste resume → AI analyzes in 10 sec → Instant rewrite</p>
-                <button onClick={onUseTool}>Optimize Now</button>
-            </div>
-        );
+<!-- Hero -->
+<div class="hero">
+    <h1>Resume Optimizer AI</h1>
+    <p>Fix your resume in 60 seconds — land more interviews</p>
+    <div class="trust-signal">✓ Free to try &nbsp;·&nbsp; No account required &nbsp;·&nbsp; Works in seconds</div>
+</div>
 
-        const ToolPage = ({ onBack, onUseTool }) => {
-            const [resume, setResume] = React.useState('');
-            const [optimizedResume, setOptimizedResume] = React.useState('');
-            const [loading, setLoading] = React.useState(false);
-            const [freeLimitHit, setFreeLimitHit] = React.useState(false);
+<!-- Tool -->
+<div class="tool-wrap">
+    <div class="tool-card">
+        <p class="input-label">Paste your resume here</p>
+        <textarea id="user-input" placeholder="Copy and paste your full resume text here..." rows="8"></textarea>
+        <div id="error-msg"></div>
+        <button id="generate-btn">Optimize My Resume →</button>
 
-            const optimizeResume = async () => {
-                posthog.capture('tool_used');
-                setLoading(true);
-                try {
-                    const response = await fetch('https://api.groq.com/v1/predict', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${CONFIG.GROQ_KEY}`
-                        },
-                        body: JSON.stringify({
-                            model: 'llama-3.3-70b-versatile',
-                            prompt: `Optimize the following resume for ATS systems and job interviews: ${resume}\n\nOutput as a bullet-by-bullet rewrite with strong action verbs, relevant keywords, and correct formatting. Include "Generated by Resume Optimizer AI — resume-optimizer-ai.vercel.app" at the end of each bullet point.`,
-                            max_tokens: 1000
-                        })
-                    });
-                    const data = await response.json();
-                    setOptimizedResume(data.choices[0].text);
-                } catch (error) {
-                    console.error('Error optimizing resume:', error);
-                } finally {
-                    setLoading(false);
-                    setFreeLimitHit(true); // Simulate free limit hit
-                }
-            };
+        <div class="output-card" id="output-card">
+            <div class="output-label">✓ Your Optimized Resume</div>
+            <div class="output-text" id="output-text"></div>
+            <button class="copy-btn" id="copy-btn">Copy to clipboard</button>
+        </div>
+    </div>
+</div>
 
-            React.useEffect(() => {
-                if (freeLimitHit) {
-                    posthog.capture('free_limit_hit');
-                }
-            }, [freeLimitHit]);
+<!-- Paywall Overlay -->
+<div id="paywall">
+    <div class="paywall-card">
+        <div style="font-size:40px;margin-bottom:12px">🔒</div>
+        <h2>Free limit reached</h2>
+        <p>You've used your 2 free uses. Unlock unlimited access for just:</p>
+        <div class="price-big">$15</div>
+        <div class="price-period">/month · cancel anytime</div>
+        <a class="paywall-cta" href="https://buy.stripe.com/test_8x26oAbHI34i5HMbATg7e0j" id="upgrade-cta" target="_blank">Upgrade Now →</a>
+        <div class="paywall-or">— or get 3 more free uses —</div>
+        <div class="email-row">
+            <input type="email" class="email-input" id="email-input" placeholder="your@email.com">
+            <button class="email-btn" id="email-btn">Get Free Uses</button>
+        </div>
+        <p class="guarantee-text">🛡 30-day money-back guarantee · Your data is never shared</p>
+    </div>
+</div>
 
-            return (
-                <div className="container">
-                    <h2>Optimize Your Resume</h2>
-                    <textarea value={resume} onChange={(e) => setResume(e.target.value)} placeholder="Paste your resume here..." />
-                    <button onClick={optimizeResume} disabled={loading}>
-                        {loading ? 'Optimizing...' : 'Optimize Now'}
-                    </button>
-                    {optimizedResume && (
-                        <div>
-                            <h3>Optimized Resume</h3>
-                            <textarea readOnly value={optimizedResume} />
-                        </div>
-                    )}
-                    <button onClick={onBack}>Back</button>
-                </div>
-            );
-        };
+<script>
+const AI_PROXY = 'https://agent-os-seven.vercel.app/api/ai';
+const POSTHOG_KEY = 'phc_pg2BYO7sa22tvbyefuV1eFpatr5P2SOt45BrjuQQv9l';
+const FREE_LIMIT = 2;
+const SLUG = 'resume-optimizer-ai';
+const SUPABASE_URL2 = 'https://hprhgfhylkykkawszgba.supabase.co';
+const SUPABASE_ANON_KEY2 = 'sb_publishable_-nQFIe4lTMWbqi6U0mgWwQ_rcvssvD-';
 
-        const PaywallPage = ({ onBack }) => {
-            const [email, setEmail] = React.useState('');
-            const [submitted, setSubmitted] = React.useState(false);
-            const [tools, setTools] = React.useState([]);
+// Safe PostHog init (never crashes the app)
+try {
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+" (stub)"},o="init identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init(POSTHOG_KEY, {api_host:'https://us.i.posthog.com', person_profiles:'identified_only'});
+} catch(e) { window.posthog = { capture: () => {}, identify: () => {} }; }
 
-            React.useEffect(() => {
-                posthog.capture('paywall_shown');
-                fetch('https://raw.githubusercontent.com/Ammumammu/agent-os/main/public/portfolio.json')
-                    .then(response => response.json())
-                    .then(data => setTools(data.slice(0, 3)))
-                    .catch(error => console.error('Error fetching tools:', error));
-            }, []);
+// ── Free limit tracking ────────────────────────────────────────────────────
+const storageKey = 'uses_' + SLUG;
+let usesLeft = parseInt(localStorage.getItem(storageKey) ?? FREE_LIMIT, 10);
+if (isNaN(usesLeft) || usesLeft > FREE_LIMIT) usesLeft = FREE_LIMIT;
 
-            const submitEmail = () => {
-                posthog.capture('email_captured');
-                setSubmitted(true);
-                // Simulate email submission
-                setTimeout(() => {
-                    alert('Thank you for signing up! You now have 3 free uses.');
-                }, 500);
-            };
+function updateBadge() {
+    const badge = document.getElementById('uses-badge');
+    badge.textContent = usesLeft + ' free use' + (usesLeft !== 1 ? 's' : '') + ' left';
+    badge.style.background = usesLeft > 0 ? 'rgba(99,102,241,.2)' : 'rgba(239,68,68,.2)';
+    badge.style.borderColor = usesLeft > 0 ? 'rgba(99,102,241,.4)' : 'rgba(239,68,68,.4)';
+    badge.style.color = usesLeft > 0 ? '#a5b4fc' : '#f87171';
+}
+updateBadge();
 
-            const priceTestAB = posthog.getFeatureFlag('price-test-ab') === 'test';
-            const price = priceTestAB ? '$23/mo' : '$15/mo';
+// ── Groq API call via secure proxy ───────────────────────────────────────
+async function callGroq(userText) {
+    const systemPrompt = `You are an expert resume coach and ATS specialist. The user will paste their resume. \nAnalyze it and provide: \n1. Top 3 ATS issues found\n2. A bullet-by-bullet rewrite with strong action verbs and relevant keywords\n3. A "Recruiter Score" out of 10 with explanation\nKeep your response structured, clear, and immediately usable.`;
 
-            return (
-                <div className="container">
-                    <h2>Unlock More Optimizations</h2>
-                    <p>Get unlimited access to Resume Optimizer AI for {price}</p>
-                    <button onClick={() => window.location.href = 'https://buy.stripe.com/test_8x26oAbHI34i5HMbATg7e0j'}>Subscribe Now</button>
-                    <button onClick={() => window.location.href = 'https://buy.stripe.com/test_8x26oAbHI34i5HMbATg7e0j'}>Buy Now</button>
-                    {!submitted && (
-                        <div>
-                            <p>Or try 3 more free optimizations:</p>
-                            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Enter your email" />
-                            <button onClick={submitEmail}>Get Free Uses</button>
-                        </div>
-                    )}
-                    <div className="cross-sell">
-                        <h3>Related Tools</h3>
-                        {tools.map((tool, index) => (
-                            <div key={index} className="cross-sell-item">
-                                <h4>{tool.name}</h4>
-                                <p>{tool.description}</p>
-                            </div>
-                        ))}
-                    </div>
-                    <button onClick={onBack}>Back</button>
-                </div>
-            );
-        };
+    const res = await fetch(AI_PROXY, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ system: systemPrompt, user: userText })
+    });
 
-        const App = () => {
-            const [page, setPage] = React.useState('landing');
+    if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err?.error || 'API error ' + res.status);
+    }
 
-            React.useEffect(() => {
-                posthog.identify('unique_user_id');
-                posthog.capture('tool_opened');
-            }, []);
+    const data = await res.json();
+    return data.text || '';
+}
 
-            const renderPage = () => {
-                switch (page) {
-                    case 'tool':
-                        return <ToolPage onBack={() => setPage('landing')} onUseTool={() => setPage('paywall')} />;
-                    case 'paywall':
-                        return <PaywallPage onBack={() => setPage('tool')} />;
-                    default:
-                        return <LandingPage onUseTool={() => setPage('tool')} />;
-                }
-            };
+// ── Main generate handler ──────────────────────────────────────────────────
+document.getElementById('generate-btn').addEventListener('click', async () => {
+    const input = document.getElementById('user-input').value.trim();
+    const errorEl = document.getElementById('error-msg');
+    errorEl.textContent = '';
 
-            return (
-                <div>
-                    {renderPage()}
-                </div>
-            );
-        };
+    if (!input) {
+        errorEl.textContent = 'Please enter some text first.';
+        return;
+    }
 
-        ReactDOM.render(<App />, document.getElementById('root'));
-    </script>
+    // Check free limit
+    if (usesLeft <= 0) {
+        document.getElementById('paywall').classList.add('visible');
+        posthog.capture('free_limit_hit', { product: SLUG });
+        return;
+    }
+
+    const btn = document.getElementById('generate-btn');
+    btn.disabled = true;
+    btn.textContent = 'Analyzing with AI...';
+    posthog.capture('tool_used', { product: SLUG });
+
+    try {
+        const result = await callGroq(input);
+        document.getElementById('output-text').textContent = result;
+        document.getElementById('output-card').classList.add('visible');
+
+        // Decrement free limit
+        usesLeft = Math.max(0, usesLeft - 1);
+        localStorage.setItem(storageKey, usesLeft);
+        updateBadge();
+
+        posthog.capture('tool_success', { product: SLUG });
+
+        // Show paywall after last free use
+        if (usesLeft <= 0) {
+            setTimeout(() => {
+                document.getElementById('paywall').classList.add('visible');
+                posthog.capture('paywall_shown', { product: SLUG });
+            }, 1500);
+        }
+    } catch (err) {
+        errorEl.textContent = 'Something went wrong: ' + err.message + '. Please try again.';
+        posthog.capture('tool_error', { product: SLUG, error: err.message });
+    } finally {
+        btn.disabled = false;
+        btn.textContent = 'Optimize My Resume →';
+    }
+});
+
+// ── Copy button ────────────────────────────────────────────────────────────
+document.getElementById('copy-btn').addEventListener('click', () => {
+    const text = document.getElementById('output-text').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+        const btn = document.getElementById('copy-btn');
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => { btn.textContent = 'Copy to clipboard'; }, 2000);
+    });
+});
+
+// ── Email capture ──────────────────────────────────────────────────────────
+document.getElementById('email-btn').addEventListener('click', async () => {
+    const email = document.getElementById('email-input').value.trim();
+    if (!email || !email.includes('@')) {
+        document.getElementById('email-input').focus();
+        return;
+    }
+
+    // Save lead to Supabase
+    if (SUPABASE_URL2 && SUPABASE_ANON_KEY2) {
+        fetch(SUPABASE_URL2 + '/rest/v1/leads', {
+            method: 'POST',
+            headers: {
+                'apikey': SUPABASE_ANON_KEY2,
+                'Content-Type': 'application/json',
+                'Prefer': 'return=minimal'
+            },
+            body: JSON.stringify({ email, product: SLUG, source: 'paywall_email_capture' })
+        }).catch(() => {});
+    }
+
+    posthog.capture('email_captured', { product: SLUG, email });
+    posthog.identify(email, { email, product: SLUG });
+
+    // Grant 3 more free uses
+    usesLeft = 3;
+    localStorage.setItem(storageKey, 3);
+    updateBadge();
+
+    document.getElementById('paywall').classList.remove('visible');
+    document.getElementById('email-input').value = '';
+});
+
+// ── Upgrade CTA tracking ───────────────────────────────────────────────────
+document.getElementById('upgrade-cta')?.addEventListener('click', () => {
+    posthog.capture('payment_clicked', { product: SLUG });
+});
+
+posthog.capture('tool_opened', { product: SLUG });
+</script>
 </body>
 </html>
